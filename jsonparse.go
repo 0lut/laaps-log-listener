@@ -49,7 +49,7 @@ func q(jsonStr string) {
 
 }
 
-func main() {
-	q("asd")
+// func main() {
+// 	q("asd")
 
-}
+// }
