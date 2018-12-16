@@ -7,13 +7,15 @@ import (
 )
 
 type singleLog struct {
-	Timestamp string      `json:"timestamp"`
-	Log       interface{} `json:"log"`
+	Timestamp string   `json:"timestamp"`
+	Log       []string `json:"log"`
 }
 
 type logBlob struct {
-	Sender string      `json: "sender"`
-	Logs   []singleLog `json: "logs"`
+	Sender  string      `json:"sender"`
+	Logtype string      `json:"logtype"`
+	Process string      `json:"process"`
+	Logs    []singleLog `json:"logs"`
 }
 
 func handleJSON(conn net.Conn) {
@@ -28,28 +30,28 @@ func handleJSON(conn net.Conn) {
 	fmt.Println(m)
 
 }
-func singleLogRet() singleLog {
-	return singleLog{Timestamp: "123123", Log: []string{"/ GET 400", "/api POST 200"}}
-}
 
-func logRet() logBlob {
-	return logBlob{Sender: "11", Logs: []singleLog{singleLogRet(), singleLogRet()}}
-}
+// func singleLogRet() singleLog {
+// 	return singleLog{Timestamp: "1889931", Log: []string{"/ qq 400", "/courier ROUTE-31.ugur 200"}}
+// }
 
-func q(jsonStr string) {
+// func logRet() logBlob {
+// 	return logBlob{Sender: "7881", Logs: []singleLog{singleLogRet(), singleLogRet()}}
+// }
 
-	b, _ := json.Marshal(logRet())
+func parseJSON(jsonStr string) logBlob {
+
 	m := logBlob{}
-	err := json.Unmarshal(b, &m)
+	err := json.Unmarshal([]byte(jsonStr), &m)
 	if err != nil {
-		panic('a')
+		fmt.Print(err)
 	} else {
-		fmt.Println(m)
+		fmt.Println(m.Sender)
 	}
+	return m
 
 }
 
 // func main() {
-// 	q("asd")
-
+// 	parseJSON(`{"sender":"myApiKey","logs":[{"log":["my other log ","/hey","hello world"],"timestamp":"1544983681585"},{"log":["my other log ","/hey","hello world"],"timestamp":"1544983741610"},{"log":["my other log ","/hey","hello world"],"timestamp":"1544983742353"},{"log":["my other log ","/hey","hello world"],"timestamp":"1544983743016"},{"log":["my other log ","/hey","hello world"],"timestamp":"1544983743638"},{"log":["myother log ","/hey","hello world"],"timestamp":"1544983744326"}]}`)
 // }

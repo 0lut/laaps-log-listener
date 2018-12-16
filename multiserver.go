@@ -2,28 +2,50 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"os"
+
+	"github.com/pkg/errors"
+
+	"github.com/streadway/amqp"
 )
 
-func handleConnection(conn net.Conn) {
+func manipulateJSON(json logBlob) (logBlob, error) {
+	apiKey, err := GetApiKeyOwner(json.Sender)
+	fmt.Print(json)
+	if err != nil {
+		return logBlob{}, errors.New("Cannot find such user!")
+	}
+	json.Sender = apiKey
+
+	return json, nil
+
+}
+
+func handleConnection(conn net.Conn, ch *amqp.Channel, q amqp.Queue) {
 	fmt.Println("Serving to:", conn.RemoteAddr())
 	defer conn.Close()
 	for {
 		data, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
+			log.Printf("Fail in ")
 			return
 		}
+		jsonData := parseJSON(data)
+		jsonData, err = manipulateJSON(jsonData)
+		if err != nil {
+			fmt.Print("bulamadim")
+			return
+		}
+		dataBytes, _ := json.Marshal(jsonData)
 
-		fmt.Println((data))
+		go sendData(ch, q.Name, dataBytes, "application/json")
 
-		// if data == "STOP" {
-		// 	return
-		// }
-		toSend := "Pinging back... " + data
-		// toSend, _ := json.Marshal(`{"ugur": "1"}`)
+		toSend := "Succesfully recieved!"
 
 		conn.Write([]byte(toSend))
 		return
@@ -31,10 +53,13 @@ func handleConnection(conn net.Conn) {
 }
 
 func main() {
+	conn_mq := connect("amqp://uwxaanrv:ny1KNNFVjWCNjU3zcc5hYu9CNiRUef7q@bee.rmq.cloudamqp.com/uwxaanrv")
+	ch := createChannel(conn_mq)
+	q := DeclareQ(ch)
+	InitRedis()
 
 	fmt.Println("Launching server...")
 
-	// listen on all interfaces
 	ln, err := net.Listen("tcp", ":8081")
 	defer ln.Close()
 	// accept connection on port
@@ -51,6 +76,6 @@ func main() {
 			os.Exit(1)
 		}
 
-		go handleJSON(conn)
+		go handleConnection(conn, ch, q)
 	}
 }

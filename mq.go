@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 
 	"github.com/streadway/amqp"
@@ -24,7 +23,7 @@ func createChannel(conn *amqp.Connection) *amqp.Channel {
 }
 
 func DeclareQ(ch *amqp.Channel) amqp.Queue {
-	q, err := ch.QueueDeclare("hellosahin", // name
+	q, err := ch.QueueDeclare("q-logs", // name
 		false, // durable
 		false, // delete when unused
 		false, // exclusive
@@ -45,10 +44,12 @@ func sendData(ch *amqp.Channel, qname string, body []byte, contentType string) {
 			ContentType: contentType,
 			Body:        body})
 	failOnError(err, "Fail to send JSON")
+
 }
 
+/*
 func main() {
-	conn := connect("amqp://guest:guest@10.0.0.117:5672")
+	conn := connect("amqp://guest:guest@localhost:5672")
 	// defer conn
 	ch := createChannel(conn)
 	// defer ch
@@ -60,7 +61,10 @@ func main() {
 	b, _ := json.Marshal(logRet())
 
 	sendData(ch, q.Name, b, "application/json")
+	// sendData(ch, q.Name, []byte("Teeest"), "text/plain")
 
 	// defer q
 
 }
+
+*/
