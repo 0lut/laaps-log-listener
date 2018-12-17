@@ -49,14 +49,3 @@ func SetApiKey(name string, key string) error {
 	err := redisdb.Set(apiKeyKey, name, 0).Err()
 	return err
 }
-
-// func main() {
-// 	InitRedis()
-// 	SetApiKey("Ugqur", "mkmddjdj")
-// 	own, err := GetApiKeyOwner("randomsha-key")
-// 	if err != nil {
-// 		fmt.Print(err)
-// 	}
-// 	fmt.Printf("owner: %s", own)
-
-// }
