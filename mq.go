@@ -46,25 +46,3 @@ func sendData(ch *amqp.Channel, qname string, body []byte, contentType string) {
 	failOnError(err, "Fail to send JSON")
 
 }
-
-/*
-func main() {
-	conn := connect("amqp://guest:guest@localhost:5672")
-	// defer conn
-	ch := createChannel(conn)
-	// defer ch
-	q := DeclareQ(ch)
-	// for i := 0; i < 15; i++ {
-	// sendText(ch, q.Name, fmt.Sprintf("%s, %d", "Helloooooc ugur", i))
-
-	// }
-	b, _ := json.Marshal(logRet())
-
-	sendData(ch, q.Name, b, "application/json")
-	// sendData(ch, q.Name, []byte("Teeest"), "text/plain")
-
-	// defer q
-
-}
-
-*/
