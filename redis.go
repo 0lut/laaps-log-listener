@@ -49,3 +49,8 @@ func SetApiKey(name string, key string) error {
 	err := redisdb.Set(apiKeyKey, name, 0).Err()
 	return err
 }
+
+// func main() {
+// 	InitRedis()
+// 	SetApiKey("Anket", "d51a127a-023a-11e9-bce9-3c15c2c09304")
+// }
