@@ -13,6 +13,9 @@ import (
 )
 
 func manipulateJSON(json logBlob) (logBlob, error) {
+	if len(json.Logs) == 0 {
+		return logBlob{}, nil
+	}
 	singleJSON := json.Logs[0]
 	senderUsername, err := GetApiKeyOwner(singleJSON.Sender)
 	if err != nil {
