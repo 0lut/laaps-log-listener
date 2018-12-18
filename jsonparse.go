@@ -8,13 +8,13 @@ import (
 type singleLog struct {
 	Timestamp string `json:"timestamp"`
 	Log       string `json:"log"`
+	Sender    string `json:"sender"`
+	Logtype   string `json:"logtype"`
+	Process   string `json:"process"`
 }
 
 type logBlob struct {
-	Sender  string      `json:"sender"`
-	Logtype string      `json:"logtype"`
-	Process string      `json:"process"`
-	Logs    []singleLog `json:"logs"`
+	Logs []singleLog `json:"logs"`
 }
 
 func parseJSON(jsonStr string) logBlob {
@@ -24,7 +24,7 @@ func parseJSON(jsonStr string) logBlob {
 	if err != nil {
 		fmt.Print(err)
 	} else {
-		fmt.Println(m.Sender)
+		fmt.Println(m.Logs)
 	}
 	return m
 

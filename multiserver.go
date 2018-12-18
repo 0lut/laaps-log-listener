@@ -13,12 +13,16 @@ import (
 )
 
 func manipulateJSON(json logBlob) (logBlob, error) {
-	apiKey, err := GetApiKeyOwner(json.Sender)
+	singleJSON := json.Logs[0]
+	apiKey, err := GetApiKeyOwner(singleJSON.Sender)
 	fmt.Print(json)
 	if err != nil {
 		return logBlob{}, errors.New("Cannot find such user!")
 	}
-	json.Sender = apiKey
+	for _, v := range json.Logs {
+		v.Sender = apiKey
+
+	}
 
 	return json, nil
 
@@ -35,14 +39,17 @@ func handleConnection(conn net.Conn, ch *amqp.Channel, q amqp.Queue) {
 			return
 		}
 		jsonData := parseJSON(data)
+		fmt.Print(data)
 		jsonData, err = manipulateJSON(jsonData)
 		if err != nil {
 			fmt.Print("bulamadim")
 			return
 		}
-		dataBytes, _ := json.Marshal(jsonData)
+		for _, v := range jsonData.Logs {
 
-		go sendData(ch, q.Name, dataBytes, "application/json")
+			data2, _ := json.Marshal(v)
+			go sendData(ch, q.Name, data2, "application/json")
+		}
 
 		toSend := "Succesfully recieved!"
 
