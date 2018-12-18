@@ -14,13 +14,13 @@ import (
 
 func manipulateJSON(json logBlob) (logBlob, error) {
 	singleJSON := json.Logs[0]
-	apiKey, err := GetApiKeyOwner(singleJSON.Sender)
+	senderUsername, err := GetApiKeyOwner(singleJSON.Sender)
 	fmt.Print(json)
 	if err != nil {
 		return logBlob{}, errors.New("Cannot find such user!")
 	}
 	for _, v := range json.Logs {
-		v.Sender = apiKey
+		v.Sender = senderUsername
 
 	}
 
@@ -39,7 +39,7 @@ func handleConnection(conn net.Conn, ch *amqp.Channel, q amqp.Queue) {
 			return
 		}
 		jsonData := parseJSON(data)
-		fmt.Print(data)
+		// fmt.Print(data)
 		jsonData, err = manipulateJSON(jsonData)
 		if err != nil {
 			fmt.Print("bulamadim")

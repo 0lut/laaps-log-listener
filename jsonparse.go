@@ -24,7 +24,7 @@ func parseJSON(jsonStr string) logBlob {
 	if err != nil {
 		fmt.Print(err)
 	} else {
-		fmt.Println(m.Logs)
+		fmt.Println(m.Logs[0])
 	}
 	return m
 
