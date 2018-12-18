@@ -23,8 +23,6 @@ func parseJSON(jsonStr string) logBlob {
 	err := json.Unmarshal([]byte(jsonStr), &m)
 	if err != nil {
 		fmt.Print(err)
-	} else {
-		fmt.Println(m.Logs[0])
 	}
 	return m
 

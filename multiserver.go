@@ -15,14 +15,15 @@ import (
 func manipulateJSON(json logBlob) (logBlob, error) {
 	singleJSON := json.Logs[0]
 	senderUsername, err := GetApiKeyOwner(singleJSON.Sender)
-	fmt.Print(json)
 	if err != nil {
 		return logBlob{}, errors.New("Cannot find such user!")
 	}
-	for _, v := range json.Logs {
-		v.Sender = senderUsername
+	for k, _ := range json.Logs {
+		// v.Sender = senderUsername
+		json.Logs[k].Sender = senderUsername
 
 	}
+	fmt.Print(json)
 
 	return json, nil
 
